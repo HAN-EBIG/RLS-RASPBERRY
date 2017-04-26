@@ -2,4 +2,4 @@
 hosts
 wpa_supplicant.conf
 .idea/
-
+playbook.retry
