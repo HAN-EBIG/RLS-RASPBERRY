@@ -31,10 +31,6 @@
     repo: 'https://github.com/HAN-EBIG/RLS-ControllerComponent.git'
     dest: /srv/ebig-controller
 
-- file:
-    path: /srv/ebig-controller
-    mode: 0777
-
 - name: Install python requirements for ebig controller
   shell: /usr/bin/pip3 install -r /srv/ebig-controller/requirements.txt
 
