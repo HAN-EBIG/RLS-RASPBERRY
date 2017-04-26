@@ -1,4 +1,4 @@
-# ansible-pi
+# Raspberry Pi Setup using Ansible
 
 ![](https://raw.github.com/motdotla/ansible-pi/master/ansible-pi.jpg)
 
@@ -11,8 +11,8 @@ There is a [complete guide to setting up your raspberry pi without a keyboard an
 Clone and setup the ansible script. 
 
 ```
-git clone https://github.com/motdotla/ansible-pi.git
-cd ansible-pi
+git clone https://github.com/HAN-EBIG/RLS-RASPBERRY.git
+cd RLS-RASPBERRY
 cp hosts.example hosts
 cp wpa_supplicant.conf.example wpa_supplicant.conf
 ```
