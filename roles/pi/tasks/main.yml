@@ -2,14 +2,56 @@
 - set_fact:
     real_ansible_host: "{{ ansible_host }}"
 
+- name: 'Set locale languages'
+  locale_gen: name=en_US.UTF-8 state=present
+
 - name: 'Configure WIFI'
   copy: src=./wpa_supplicant.conf dest=/etc/wpa_supplicant/wpa_supplicant.conf mode=0600
 
-- name: 'Update APT package cache'
-  action: apt update_cache=yes
+- name: 'Upgrade and update APT packages'
+  apt: >
+    upgrade=yes
+    update_cache=yes
+    cache_valid_time=3600
 
-- name: 'Upgrade APT to the lastest packages'
-  action: apt upgrade=safe
+- name: Install common packages
+  action:
+    apt pkg={{ item }}
+    state=present
+  with_items:
+  - vim
+  - wget
+  - git
+  - curl
+  - rsync
+  - python3
+  - python3-pip
+
+- git:
+    repo: 'https://github.com/HAN-EBIG/RLS-ControllerComponent.git'
+    dest: /srv/ebig-controller
+
+- file:
+    path: /srv/ebig-controller
+    mode: 0777
+
+- name: Install python requirements for ebig controller
+  shell: /usr/bin/pip3 install -r /srv/ebig-controller/requirements.txt
+
+- name: Copy SystemCtl unit file for ebig controller
+  copy: src=./ebig-controller.service dest=/lib/systemd/system/ebig-controller.service mode=0644
+
+- name: Enable SystemCtl script for ebig controller
+  shell: systemctl daemon-reload && systemctl enable ebig-controller.service
+
+- name: 'Check if packages need to be autoremoved'
+  command: apt-get --dry-run autoremove
+  register: check_autoremove
+  changed_when: False
+
+- name: 'Autoremove unused packages'
+  command: apt-get -y autoremove
+  when: "'packages will be REMOVED' in check_autoremove.stdout"
 
 - name: 'Reboot'
   shell: sleep 2 && reboot

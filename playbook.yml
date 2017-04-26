@@ -1,8 +1,8 @@
 ---
 
-- name: Ansible Playbook for configuring brand new Raspberry Pi
+- name: Ansible Playbook for configuring Ebig RaspberryPi Controller
 
-  hosts: webservers
+  hosts: ebig-controllers
   roles:
     - pi
   remote_user: pi

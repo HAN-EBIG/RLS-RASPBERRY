@@ -1,0 +1,10 @@
+[Unit]
+Description=Python Controller Ebig
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/python3 /srv/ebig-controller/ebig-controller.py > /srv/ebig-controller/ebig-controller.log 2>&1 &
+
+[Install]
+WantedBy=multi-user.target
