@@ -40,6 +40,16 @@
 - name: Enable SystemCtl script for ebig controller
   shell: systemctl daemon-reload && systemctl enable ebig-controller.service
 
+- name: Copy systemStats.sh file
+  copy: src=./sendSystemStats.sh dest=/usr/local/bin/sendSystemStats.sh mode=0774
+
+- name: Create system stats cronjob
+  cron: minute="*"
+        name="Send system stats to Influx"
+        cron_file="ebig-systemStats"
+        user="root"
+        job="/usr/local/bin/sendSystemStats.sh"
+
 - name: 'Check if packages need to be autoremoved'
   command: apt-get --dry-run autoremove
   register: check_autoremove
