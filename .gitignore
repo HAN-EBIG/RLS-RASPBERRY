@@ -3,3 +3,4 @@ hosts
 wpa_supplicant.conf
 .idea/
 playbook.retry
+/vault_pass.txt
