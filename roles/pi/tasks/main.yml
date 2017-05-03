@@ -8,6 +8,9 @@
 - name: 'Configure WIFI'
   copy: src=./wpa_supplicant.conf dest=/etc/wpa_supplicant/wpa_supplicant.conf mode=0600
 
+- name: Change password for user pi
+  user: name=pi password="$6$jsbAHgyie5$gD17qGSLyeNqXXHw02Ic3YgBxT5qN9gihc06RXszg8s9aaL5GUD9TV6abLDpJfsEftAK88D7dB452DBh07iCP/"
+
 - name: 'Upgrade and update APT packages'
   apt: >
     upgrade=yes
@@ -49,6 +52,11 @@
         cron_file="ebig-systemStats"
         user="root"
         job="/usr/local/bin/sendSystemStats.sh"
+
+- cron:
+    name: "Add cron-job to reboot every night at 1am"
+    hour: "1"
+    job: "/sbin/reboot"
 
 - name: 'Check if packages need to be autoremoved'
   command: apt-get --dry-run autoremove
