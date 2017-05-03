@@ -1,4 +1,6 @@
 ---
+- include_vars: passwords.yml
+
 - set_fact:
     real_ansible_host: "{{ ansible_host }}"
 
@@ -7,9 +9,6 @@
 
 - name: 'Configure WIFI'
   copy: src=./wpa_supplicant.conf dest=/etc/wpa_supplicant/wpa_supplicant.conf mode=0600
-
-- name: Change password for user pi
-  user: name=pi password="$6$jsbAHgyie5$gD17qGSLyeNqXXHw02Ic3YgBxT5qN9gihc06RXszg8s9aaL5GUD9TV6abLDpJfsEftAK88D7dB452DBh07iCP/"
 
 - name: 'Upgrade and update APT packages'
   apt: >
@@ -34,6 +33,11 @@
     repo: 'https://github.com/HAN-EBIG/RLS-ControllerComponent.git'
     dest: /srv/ebig-controller
 
+- replace:
+    path: /srv/ebig-controller/ebig-controller.py
+    regexp: '@sensorpass@'
+    replace: '{{influx_password}}'
+
 - name: Install python requirements for ebig controller
   shell: /usr/bin/pip3 install -r /srv/ebig-controller/requirements.txt
 
@@ -45,6 +49,11 @@
 
 - name: Copy systemStats.sh file
   copy: src=./sendSystemStats.sh dest=/usr/local/bin/sendSystemStats.sh mode=0774
+
+- replace:
+    path: /usr/local/bin/sendSystemStats.sh
+    regexp: '@sensorpass@'
+    replace: '{{influx_password}}'
 
 - name: Create system stats cronjob
   cron: minute="*"
@@ -66,6 +75,9 @@
 - name: 'Autoremove unused packages'
   command: apt-get -y autoremove
   when: "'packages will be REMOVED' in check_autoremove.stdout"
+
+- name: Change password for user pi
+  user: name=pi password="$6$jsbAHgyie5$gD17qGSLyeNqXXHw02Ic3YgBxT5qN9gihc06RXszg8s9aaL5GUD9TV6abLDpJfsEftAK88D7dB452DBh07iCP/"
 
 - name: 'Reboot'
   shell: sleep 2 && reboot

@@ -9,12 +9,13 @@ git clone https://github.com/HAN-EBIG/RLS-RASPBERRY.git
 cd RLS-RASPBERRY
 cp hosts.example hosts
 cp wpa_supplicant.conf.example wpa_supplicant.conf
+cp vault_pass.txt.example vault_pass.txt
 ```
 
-Edit the `wpa_supplicant.conf` and `hosts` files.
+Edit the `wpa_supplicant.conf`, `hosts`, and `vault_pass.txt` files.
 
 ```
-ansible-playbook playbook.yml -i hosts --ask-pass --become -c paramiko
+bash installController.sh
 ```
 
 ## Requirements
