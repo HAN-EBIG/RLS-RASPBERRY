@@ -29,6 +29,15 @@
   - python3
   - python3-pip
 
+- name: Copy MySensors gateway
+  copy: src=./mysgw dest=/usr/local/bin/ mode=0774
+
+- name: Copy SystemCtl unit file for mysensors gateway
+  copy: src=./mysgw.service dest=/lib/systemd/system/mysgw.service mode=0644
+
+- name: Enable SystemCtl script for mysensors gateway
+  shell: systemctl daemon-reload && systemctl enable mysgw.service
+
 - git:
     repo: 'https://github.com/HAN-EBIG/RLS-ControllerComponent.git'
     dest: /srv/ebig-controller
